@@ -20,9 +20,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         
-        const response = await createSession(email, password)
-
-        console.log('login', response.data)
+        const response = await createSession(email, password)        
 
         const loggedUser = response.data.user
         const token = response.data.token
@@ -31,15 +29,21 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('token', token)
         //verificar se com backend real, isso é armazenado em localStorage mesmo
 
-        if (password === '123') {
+        api.defaults.headers.Authorization = `Bearer ${token}`;
+       
             setUser(loggedUser)
             navigate('/')
-        }
+        
     }
 
     const logout = () => {
         console.log('logout')
+
         localStorage.removeItem('user')
+        localStorage.removeItem('token')
+
+        api.defaults.headers.Authorization = null
+
         setUser(null)
         navigate('/login')
     }

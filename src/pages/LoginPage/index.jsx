@@ -10,14 +10,12 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log("submit", {email, password});
+   
     login(email, password); //integração com o context e por fim com a api
   };
   return (
     <div id="login">
-      <h1 className="title">Login do sistema</h1>
-      <p>{String(authenticated)}</p>
+      <h1 className="title">Login do sistema</h1>      
       <form className="form" onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="email">Email</label>
