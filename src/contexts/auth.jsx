@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext } from "react";
 import { useNavigate } from 'react-router-dom';
+import {api, createSession} from '../services/api'
 
 export const AuthContext = createContext();
 
@@ -17,15 +18,18 @@ export const AuthProvider = ({ children }) => {
         setLoading(false)
     }, [])
 
-    const login = (email, password) => {
-        console.log('login auth', { email, password })
+    const login = async (email, password) => {
+        
+        const response = await createSession(email, password)
 
-        const loggedUser = {
-            id: '123',
-            email,
-        }
+        console.log('login', response.data)
+
+        const loggedUser = response.data.user
+        const token = response.data.token
 
         localStorage.setItem('user', JSON.stringify(loggedUser));
+        localStorage.setItem('token', token)
+        //verificar se com backend real, isso é armazenado em localStorage mesmo
 
         if (password === '123') {
             setUser(loggedUser)
@@ -35,6 +39,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         console.log('logout')
+        localStorage.removeItem('user')
         setUser(null)
         navigate('/login')
     }
